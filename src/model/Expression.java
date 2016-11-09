@@ -1,6 +1,6 @@
 package model;
 
-import model.expression.Litteral;
+import model.expression.*;
 
 import java.util.ArrayList;
 
@@ -32,6 +32,22 @@ public abstract class Expression {
         int  indexChar = 0;
 
         switch (currentChar) {
+            case '!':
+                exp = new Negation(createExpression(e.substring(indexChar+1)));
+                break;
+            case '(':
+                switch (e.charAt(indexChar+2)) {
+                    case '&':
+                        exp = new Conjunction(createExpression(e.substring(indexChar+1, indexChar+2)), createExpression(e.substring(indexChar+3, indexChar+4)));
+                        break;
+                    case '|':
+                        exp = new Disjunction(createExpression(e.substring(indexChar+1, indexChar+2)), createExpression(e.substring(indexChar+3, indexChar+4)));
+                        break;
+                    case '>':
+                        exp = new Implication(createExpression(e.substring(indexChar+1, indexChar+2)), createExpression(e.substring(indexChar+3, indexChar+4)));
+                        break;
+                }
+                break;
             default:
                 exp = new Litteral(currentChar);
                 break;

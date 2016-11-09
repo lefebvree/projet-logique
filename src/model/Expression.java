@@ -22,6 +22,8 @@ public abstract class Expression {
     }
 
     public static Expression createExpression(String e) {
+        int endIndex = 0;
+        int level = 0;
 
         // Remove spaces
         e = e.replaceAll("\\s+","");
@@ -33,18 +35,55 @@ public abstract class Expression {
 
         switch (currentChar) {
             case '!':
-                exp = new Negation(createExpression(e.substring(indexChar+1)));
+                endIndex = indexChar+1;
+                level = 0;
+                do {
+                    if(e.charAt(endIndex) == '(') {
+                        level++;
+                    } else if(e.charAt(endIndex) == ')') {
+                        level--;
+                    }
+                    endIndex++;
+                } while(level != 0);
+                exp = new Negation(createExpression(e.substring(indexChar+1, endIndex)));
                 break;
             case '(':
-                switch (e.charAt(indexChar+2)) {
+                endIndex = indexChar+1;
+                level = 0;
+                do {
+                    if(e.charAt(endIndex) == '(') {
+                        level++;
+                    } else if(e.charAt(endIndex) == ')') {
+                        level--;
+                    }
+                    endIndex++;
+                } while(level != 0);
+
+                int indexOperator = endIndex;
+                endIndex++;
+
+                if(e.charAt(endIndex) == '!') {
+                    endIndex++;
+                }
+
+                level = 1;
+                do {
+                    if(e.charAt(endIndex) == '(') {
+                        level++;
+                    } else if(e.charAt(endIndex) == ')') {
+                        level--;
+                    }
+                    endIndex++;
+                } while(level != 0);
+                switch (e.charAt(indexOperator)) {
                     case '&':
-                        exp = new Conjunction(createExpression(e.substring(indexChar+1, indexChar+2)), createExpression(e.substring(indexChar+3, indexChar+4)));
+                        exp = new Conjunction(createExpression(e.substring(indexChar+1, indexOperator)), createExpression(e.substring(indexOperator+1, endIndex)));
                         break;
                     case '|':
-                        exp = new Disjunction(createExpression(e.substring(indexChar+1, indexChar+2)), createExpression(e.substring(indexChar+3, indexChar+4)));
+                        exp = new Disjunction(createExpression(e.substring(indexChar+1, indexOperator)), createExpression(e.substring(indexOperator+1, endIndex)));
                         break;
                     case '>':
-                        exp = new Implication(createExpression(e.substring(indexChar+1, indexChar+2)), createExpression(e.substring(indexChar+3, indexChar+4)));
+                        exp = new Implication(createExpression(e.substring(indexChar+1, indexOperator)), createExpression(e.substring(indexOperator+1, endIndex)));
                         break;
                 }
                 break;

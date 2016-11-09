@@ -5,12 +5,21 @@ import model.Expression;
 import java.util.ArrayList;
 
 public class Implication extends Expression {
+
+    /*************
+     * VARIABLES *
+     *************/
+
+    private Expression expression1;
+    private Expression expression2;
+
     /****************
      * CONSTRUCTORS *
      ****************/
 
-    public Litteral(String expression) {
-
+    public Implication(Expression e1, Expression e2) {
+        this.expression1 = e1;
+        this.expression2 = e2;
     }
 
     /***********
@@ -18,11 +27,19 @@ public class Implication extends Expression {
      ***********/
 
     public int subExpressionNumber() {
-        return 0;
+        return 2;
     }
 
     public ArrayList<Expression> getSubExpressions() {
+
         ArrayList<Expression> a = new ArrayList<>();
+        a.add(this.expression1);
+        a.add(this.expression2);
+
         return a;
+    }
+
+    public String toString() {
+        return "(" + this.expression1.toString() + " > " + this.expression2.toString() + ")";
     }
 }

@@ -1,5 +1,7 @@
 package model;
 
+import model.expression.Litteral;
+
 import java.util.ArrayList;
 
 public abstract class Expression {
@@ -20,7 +22,20 @@ public abstract class Expression {
     }
 
     public static Expression createExpression(String e) {
+
+        // Remove spaces
+        e = e.replaceAll("\\s+","");
+
         Expression exp = null;
+
+        char currentChar = e.charAt(0);
+        int  indexChar = 0;
+
+        switch (currentChar) {
+            default:
+                exp = new Litteral(currentChar);
+                break;
+        }
 
         return exp;
     }

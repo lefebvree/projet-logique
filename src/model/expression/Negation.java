@@ -24,12 +24,18 @@ public class Negation extends Expression {
      ***********/
 
     public int subExpressionNumber() {
-        return 0;
+        return 1;
     }
 
     public ArrayList<Expression> getSubExpressions() {
+
         ArrayList<Expression> a = new ArrayList<>();
         a.add(this.expression);
+
         return a;
+    }
+
+    public String toString() {
+        return "!(" + this.expression + ")";
     }
 }

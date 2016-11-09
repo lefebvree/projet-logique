@@ -28,7 +28,10 @@ public class Litteral extends Expression {
     }
 
     public ArrayList<Expression> getSubExpressions() {
-        ArrayList<Expression> a = new ArrayList<>();
-        return a;
+        return null;
+    }
+
+    public String toString() {
+        return "" + this.name;
     }
 }

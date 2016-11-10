@@ -40,6 +40,6 @@ public class Implication extends Expression {
     }
 
     public String toString() {
-        return "(" + this.expression1.toString() + " > " + this.expression2.toString() + ")";
+        return "(" + this.expression1.toString() + " → " + this.expression2.toString() + ")";
     }
 }

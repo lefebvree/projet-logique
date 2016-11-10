@@ -36,6 +36,6 @@ public class Negation extends Expression {
     }
 
     public String toString() {
-        return "!" + this.expression;
+        return "¬" + this.expression.toString();
     }
 }

@@ -16,6 +16,7 @@ public class ExpressionComponent {
 
         this.panel = new JPanel();
         this.name  = new JLabel(e.toString());
+        this.panel.add(this.name);
     }
 
     public ArrayList<ExpressionComponent> split () {

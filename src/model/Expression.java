@@ -1,5 +1,6 @@
 package model;
 
+import com.sun.xml.internal.ws.util.StringUtils;
 import model.expression.*;
 
 import java.util.ArrayList;
@@ -22,11 +23,11 @@ public abstract class Expression {
     }
 
     public static Expression createExpression(String e) {
-        int endIndex = 0;
-        int level = 0;
 
         // Remove spaces
         e = e.replaceAll("\\s+","");
+
+        if (!hasCorrectParenthesisNumber(e)) return null;
 
         Expression exp = null;
 
@@ -35,55 +36,34 @@ public abstract class Expression {
 
         switch (currentChar) {
             case '!':
-                endIndex = indexChar+1;
-                level = 0;
-                do {
-                    if(e.charAt(endIndex) == '(') {
-                        level++;
-                    } else if(e.charAt(endIndex) == ')') {
-                        level--;
-                    }
-                    endIndex++;
-                } while(level != 0);
-                exp = new Negation(createExpression(e.substring(indexChar+1, endIndex)));
+                String subExpression = getNextExpression(e, indexChar + 1);
+
+                exp = new Negation(createExpression(subExpression));
                 break;
+
             case '(':
-                endIndex = indexChar+1;
-                level = 0;
-                do {
-                    if(e.charAt(endIndex) == '(') {
-                        level++;
-                    } else if(e.charAt(endIndex) == ')') {
-                        level--;
-                    }
-                    endIndex++;
-                } while(level != 0);
+                indexChar++;
+                String firstExpressionString = getNextExpression(e, indexChar);
+                // Increment index position by first expression length
+                indexChar += firstExpressionString.length();
 
-                int indexOperator = endIndex;
-                endIndex++;
+                char operator = e.charAt(indexChar);
+                indexChar++;
 
-                if(e.charAt(endIndex) == '!') {
-                    endIndex++;
-                }
+                String secondExpressionSting = getNextExpression(e, indexChar);
 
-                level = 1;
-                do {
-                    if(e.charAt(endIndex) == '(') {
-                        level++;
-                    } else if(e.charAt(endIndex) == ')') {
-                        level--;
-                    }
-                    endIndex++;
-                } while(level != 0);
-                switch (e.charAt(indexOperator)) {
+                Expression firstExpression  = createExpression(firstExpressionString);
+                Expression secondExpression = createExpression(secondExpressionSting);
+
+                switch (operator) {
                     case '&':
-                        exp = new Conjunction(createExpression(e.substring(indexChar+1, indexOperator)), createExpression(e.substring(indexOperator+1, endIndex)));
+                        exp = new Conjunction(firstExpression, secondExpression);
                         break;
                     case '|':
-                        exp = new Disjunction(createExpression(e.substring(indexChar+1, indexOperator)), createExpression(e.substring(indexOperator+1, endIndex)));
+                        exp = new Disjunction(firstExpression, secondExpression);
                         break;
                     case '>':
-                        exp = new Implication(createExpression(e.substring(indexChar+1, indexOperator)), createExpression(e.substring(indexOperator+1, endIndex)));
+                        exp = new Implication(firstExpression, secondExpression);
                         break;
                 }
                 break;
@@ -93,5 +73,38 @@ public abstract class Expression {
         }
 
         return exp;
+    }
+
+    private static String getNextExpression (String s, int index) {
+
+        int position = index;
+        int level = 0;
+
+        do {
+
+            if(s.charAt(position) == '(') {
+                level++;
+            } else if(s.charAt(position) == ')') {
+                level--;
+            }
+            position++;
+
+        } while(level != 0);
+
+        return s.substring(index, position);
+    }
+
+    private static boolean hasCorrectParenthesisNumber (String s) {
+        int level = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+
+            char c = s.charAt(i);
+
+            if      (c == '(') level ++;
+            else if (c == ')') level --;
+        }
+
+        return (level == 0);
     }
 }

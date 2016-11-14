@@ -27,6 +27,26 @@ public class Negation extends Expression {
         return 1;
     }
 
+    public Expression solveExpression() {
+        String className = this.expression.getClass().getSimpleName();
+        Expression exp = null;
+        ArrayList<Expression> subExpression = this.expression.getSubExpressions();
+
+        switch(className) {
+            case "Implication":
+                exp = createExpression("("   + subExpression.get(0).toString() + "&!("  + subExpression.get(1).toString() + "))");
+                break;
+            case "Disjunction":
+                exp = createExpression("(!(" + subExpression.get(0).toString() + ")&!(" + subExpression.get(1).toString() + "))");
+                break;
+            case "Conjunction":
+                exp = createExpression("!" + subExpression.get(0).toString() + "|!" + subExpression.get(1).toString() + "");
+                break;
+        }
+
+        return exp;
+    }
+
     public ArrayList<Expression> getSubExpressions() {
 
         ArrayList<Expression> a = new ArrayList<>();

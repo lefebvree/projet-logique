@@ -31,6 +31,10 @@ public class Litteral extends Expression {
         return null;
     }
 
+    public Expression solveExpression() {
+        return this;
+    }
+
     public String toString() {
         return "" + this.name;
     }

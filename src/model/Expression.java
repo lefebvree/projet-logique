@@ -17,13 +17,13 @@ public abstract class Expression {
      ***********/
 
     public abstract int subExpressionNumber();
+    public abstract Expression solveExpression();
 
     public boolean hasSubExpression() {
         return this.subExpressionNumber() != 0;
     }
 
     public static Expression createExpression(String e) {
-
         // Remove spaces
         e = e.replaceAll("\\s+","");
 
@@ -43,6 +43,7 @@ public abstract class Expression {
 
             case '(':
                 indexChar++;
+
                 String firstExpressionString = getNextExpression(e, indexChar);
                 // Increment index position by first expression length
                 indexChar += firstExpressionString.length();
@@ -76,11 +77,13 @@ public abstract class Expression {
     }
 
     private static String getNextExpression (String s, int index) {
-
         int position = index;
         int level = 0;
 
         do {
+            if(s.charAt(index) == '!') {
+                position++;
+            }
 
             if(s.charAt(position) == '(') {
                 level++;

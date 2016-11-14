@@ -38,6 +38,11 @@ public class Conjunction extends Expression {
         return a;
     }
 
+    public Expression solveExpression() {
+        Expression exp = createExpression("(" + this.expression1.toString() + "&" + this.expression2.toString() + ")");
+        return exp;
+    }
+
     public String toString() {
         return "(" + this.expression1.toString() + " Λ " + this.expression2.toString() + ")";
     }

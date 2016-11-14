@@ -39,6 +39,15 @@ public class Implication extends Expression {
         return a;
     }
 
+    public Expression solveExpression() {
+        System.out.println("debut solve");
+        System.out.println(this.expression1);
+        System.out.println(this.expression2);
+        Expression exp = createExpression("(!" + this.expression1.toString() + "|" + this.expression2.toString() + ")");
+        System.out.println("fin solve");
+        return exp;
+    }
+
     public String toString() {
         return "(" + this.expression1.toString() + " → " + this.expression2.toString() + ")";
     }

@@ -58,12 +58,15 @@ public abstract class Expression {
 
                 switch (operator) {
                     case '&':
+                    case 'Λ':
                         exp = new Conjunction(firstExpression, secondExpression);
                         break;
                     case '|':
+                    case 'V':
                         exp = new Disjunction(firstExpression, secondExpression);
                         break;
                     case '>':
+                    case '→':
                         exp = new Implication(firstExpression, secondExpression);
                         break;
                 }

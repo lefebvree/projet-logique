@@ -1,10 +1,6 @@
 import model.Expression;
 import view.Window;
 
-import java.util.ArrayList;
-
-import static model.Expression.createExpression;
-
 public class Main {
     public static void main(String[] args) {
         Expression e1 = Expression.createExpression("( p > (( p > q ) > q ))");

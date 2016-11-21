@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ExpressionComponent {
 
@@ -20,6 +21,7 @@ public class ExpressionComponent {
 
         this.panel = new JPanel();
         this.panel.setLayout(new BorderLayout());
+        this.panel.setBackground(getRandomColor());
 
         this.name  = new JLabel(e.toString(), SwingConstants.CENTER);
         this.name.addMouseListener(new MouseAdapter() {
@@ -49,10 +51,11 @@ public class ExpressionComponent {
                     String expressiontype = e.getClass().getSimpleName();
                     GridLayout layout = null;
 
-                    switch (expressiontype) {
-                        case "Conjonction":
+                    System.out.println(expressiontype);
 
-                            System.out.println("Conjonction");
+                    switch (expressiontype) {
+                        case "Conjunction":
+
                             layout = new GridLayout(2, 1);
 
                             break;
@@ -60,7 +63,6 @@ public class ExpressionComponent {
                         case "Disjunction":
                         case "Implication":
 
-                            System.out.println("Disjunction / Implication");
                             layout = new GridLayout(1, 2);
 
                             break;
@@ -68,7 +70,7 @@ public class ExpressionComponent {
 
                     subExpression = e.getSubExpressions();
                     System.out.println(e);
-                    System.out.println(subExpression);
+                    //System.out.println(subExpression);
                     this.subExpressionComponent.add(new ExpressionComponent(subExpression.get(0)));
                     this.subExpressionComponent.add(new ExpressionComponent(subExpression.get(1)));
 
@@ -101,5 +103,15 @@ public class ExpressionComponent {
 
     public JPanel getPanel() {
         return panel;
+    }
+
+    public static Color getRandomColor() {
+        Random rand = new Random();
+
+        float r = rand.nextFloat();
+        float g = rand.nextFloat();
+        float b = rand.nextFloat();
+
+        return new Color(r, g, b);
     }
 }

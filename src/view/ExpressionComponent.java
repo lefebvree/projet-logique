@@ -3,6 +3,7 @@ package view;
 import model.Expression;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -15,6 +16,10 @@ public class ExpressionComponent {
     private JPanel     panel, bottompanel;
     private JLabel     name;
     private ArrayList<ExpressionComponent> subExpressionComponent;
+
+    private static Random rand = new Random();
+
+    private static final String colorlist[] = {"#2ecc71","#27ae60","#16a085","#1abc9c","#3498db","#2980b9","#34495e","#2c3e50","#8e44ad","#9b59b6","#e74c3c","#c0392b","#d35400","#e67e22","#f39c12","#f1c40f"};
 
     public ExpressionComponent (Expression e) {
         this.expression = e;
@@ -29,6 +34,9 @@ public class ExpressionComponent {
                 solveExpression();
             }
         });
+        this.name.setForeground(Color.WHITE);
+        this.name.setFont(new Font("Monospaced", Font.PLAIN, 20));
+        this.name.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         this.panel.add(this.name, BorderLayout.PAGE_START);
 
@@ -43,6 +51,9 @@ public class ExpressionComponent {
             ArrayList<Expression> subExpression;
 
             this.bottompanel = new JPanel();
+
+            this.bottompanel.removeAll();
+            this.subExpressionComponent.clear();
 
             switch (e.subExpressionNumber()) {
 
@@ -69,8 +80,10 @@ public class ExpressionComponent {
                     }
 
                     subExpression = e.getSubExpressions();
-                    System.out.println(e);
+                    //System.out.println(e);
                     //System.out.println(subExpression);
+
+                    System.out.println(subExpression);
                     this.subExpressionComponent.add(new ExpressionComponent(subExpression.get(0)));
                     this.subExpressionComponent.add(new ExpressionComponent(subExpression.get(1)));
 
@@ -106,12 +119,8 @@ public class ExpressionComponent {
     }
 
     public static Color getRandomColor() {
-        Random rand = new Random();
+        String color = colorlist[rand.nextInt(colorlist.length)];
 
-        float r = rand.nextFloat();
-        float g = rand.nextFloat();
-        float b = rand.nextFloat();
-
-        return new Color(r, g, b);
+        return Color.decode(color);
     }
 }

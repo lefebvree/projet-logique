@@ -35,6 +35,10 @@ public class Litteral extends Expression {
         return this;
     }
 
+    public char getName() {
+        return name;
+    }
+
     public String toString() {
         return "" + this.name;
     }

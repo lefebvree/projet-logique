@@ -4,6 +4,7 @@ import model.Expression;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Window {
 
@@ -25,7 +26,10 @@ public class Window {
             exc.printStackTrace();
         }
 
-        this.firstexpression = new ExpressionComponent(e);
+        ArrayList<Expression> exp = new ArrayList<>();
+        exp.add(e);
+
+        this.firstexpression = new ExpressionComponent(exp);
         this.frame.add(this.firstexpression.getPanel());
 
         this.frame.setVisible(true);

@@ -6,6 +6,7 @@ public class Main {
     public static void main(String[] args) {
 
         ExpressionParser parser = new ExpressionParser();
+        //Expression ex = parser.getExpression(16);
         Expression ex = parser.getRandomExpression();
 
         System.out.println("Expression: " + ex.toString());

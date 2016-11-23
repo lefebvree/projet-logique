@@ -12,105 +12,129 @@ import java.util.Random;
 
 public class ExpressionComponent {
 
-    private Expression expression;
-    private JPanel     panel, bottompanel;
-    private JLabel     name;
-    private ArrayList<ExpressionComponent> subExpressionComponent;
+    private ArrayList<Expression> expressions;
+    private JPanel panel, toppanel, bottompanel;
+
+    private boolean expanded;
 
     private static Random rand = new Random();
 
     private static final String colorlist[] = {"#2ecc71","#27ae60","#16a085","#1abc9c","#3498db","#2980b9","#34495e","#2c3e50","#8e44ad","#9b59b6","#e74c3c","#c0392b","#d35400","#e67e22","#f39c12","#f1c40f"};
 
-    public ExpressionComponent (Expression e) {
-        this.expression = e;
+    public ExpressionComponent (ArrayList<Expression> exps) {
+        this.expressions = exps;
+        this.expanded = false;
 
         this.panel = new JPanel();
-        this.panel.setLayout(new BorderLayout());
+        //this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.Y_AXIS));
         this.panel.setBackground(getRandomColor());
 
-        this.name  = new JLabel(e.toString(), SwingConstants.CENTER);
-        this.name.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                solveExpression();
-            }
-        });
-        this.name.setForeground(Color.WHITE);
-        this.name.setFont(new Font("Monospaced", Font.PLAIN, 20));
-        this.name.setBorder(new EmptyBorder(10, 10, 10, 10));
+        this.toppanel = new JPanel();
+        //this.toppanel.setLayout(new BoxLayout(this.toppanel, BoxLayout.Y_AXIS));
 
-        this.panel.add(this.name, BorderLayout.PAGE_START);
+        for (int i = 0; i < this.expressions.size(); i++) {
 
-        subExpressionComponent = new ArrayList<>();
+            final int index = i;
+
+            Expression expression = this.expressions.get(i);
+
+            JPanel expressionpanel = new JPanel();
+            JLabel expressionname  = new JLabel(expression.toString(), SwingConstants.CENTER);
+
+            expressionpanel.setBackground(getRandomColor());
+            expressionpanel.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    solveExpression(index);
+                }
+            });
+            expressionname.setForeground(Color.WHITE);
+            expressionname.setFont(new Font("Monospaced", Font.PLAIN, 20));
+            expressionname.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+            expressionpanel.add(expressionname, BorderLayout.PAGE_START);
+            this.toppanel.add(expressionpanel);
+        }
+
+        this.panel.add(this.toppanel, "North");
     }
 
-    public void solveExpression() {
+    public void solveExpression(int i) {
 
-        if (this.expression.hasSubExpression()) {
+        if (!this.expanded) {
+            this.expanded = true;
 
-            Expression e = this.expression.solveExpression();
+            Expression expression = this.expressions.get(i);
+
             ArrayList<Expression> subExpression;
+
+            Expression newexpression;
+            String expressiontype;
 
             this.bottompanel = new JPanel();
 
-            this.bottompanel.removeAll();
-            this.subExpressionComponent.clear();
+            if (expression.hasSubExpression()) {
 
-            switch (e.subExpressionNumber()) {
+                newexpression = expression.solveExpression();
 
-                case 2:
+                expressiontype = newexpression.getClass().getSimpleName();
 
-                    String expressiontype = e.getClass().getSimpleName();
-                    GridLayout layout = null;
+                System.out.println(expressiontype);
 
-                    System.out.println(expressiontype);
+                switch (expressiontype) {
 
-                    switch (expressiontype) {
-                        case "Conjunction":
+                    case "Conjunction":
 
-                            layout = new GridLayout(2, 1);
+                        subExpression = newexpression.getSubExpressions();
 
-                            break;
+                        ArrayList<Expression> subexp = new ArrayList<>(this.expressions);
+                        subexp.remove(i);
 
-                        case "Disjunction":
-                        case "Implication":
+                        subexp.add(0, subExpression.get(0));
+                        subexp.add(0, subExpression.get(1));
 
-                            layout = new GridLayout(1, 2);
+                        ExpressionComponent expcomp = new ExpressionComponent(subexp);
 
-                            break;
-                    }
+                        this.bottompanel.add(expcomp.getPanel());
 
-                    subExpression = e.getSubExpressions();
-                    //System.out.println(e);
-                    //System.out.println(subExpression);
+                        break;
 
-                    System.out.println(subExpression);
-                    this.subExpressionComponent.add(new ExpressionComponent(subExpression.get(0)));
-                    this.subExpressionComponent.add(new ExpressionComponent(subExpression.get(1)));
+                    case "Disjunction":
+                    case "Implication":
 
+                        subExpression = newexpression.getSubExpressions();
 
-                    this.bottompanel.setLayout(layout);
+                        ArrayList<ExpressionComponent> subExpressionComponent = new ArrayList<>();
 
-                    this.bottompanel.add(this.subExpressionComponent.get(0).getPanel());
-                    this.bottompanel.add(this.subExpressionComponent.get(1).getPanel());
+                        ArrayList<Expression> subexp1 = new ArrayList<>(this.expressions);
+                        ArrayList<Expression> subexp2 = new ArrayList<>(this.expressions);
+                        subexp1.remove(i);
+                        subexp2.remove(i);
 
-                    break;
+                        subexp1.add(0, subExpression.get(0));
+                        subexp2.add(0, subExpression.get(1));
 
-                case 1:
+                        subExpressionComponent.add(new ExpressionComponent(subexp1));
+                        subExpressionComponent.add(new ExpressionComponent(subexp2));
 
-                    this.subExpressionComponent.add(new ExpressionComponent(e));
+                        this.bottompanel.setLayout(new GridLayout(1, 2));
 
-                    this.bottompanel.add(this.subExpressionComponent.get(0).getPanel());
+                        this.bottompanel.add(subExpressionComponent.get(0).getPanel());
+                        this.bottompanel.add(subExpressionComponent.get(1).getPanel());
 
-                    break;
+                        break;
+
+                    default:
+                        return;
+                }
+
+                this.panel.add(this.bottompanel, "South");
+
+                this.bottompanel.validate();
+                this.bottompanel.repaint();
+
+                this.panel.validate();
+                this.panel.repaint();
             }
-
-            this.panel.add(this.bottompanel, BorderLayout.CENTER);
-
-            this.bottompanel.validate();
-            this.bottompanel.repaint();
-
-            this.panel.validate();
-            this.panel.repaint();
         }
     }
 

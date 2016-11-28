@@ -40,7 +40,7 @@ public class Negation extends Expression {
                 exp = createExpression("(!" + subExpression.get(0).toString() + "&!" + subExpression.get(1).toString() + ")");
                 break;
             case "Conjunction":
-                exp = createExpression("!" + subExpression.get(0).toString() + "|!" + subExpression.get(1).toString() + "");
+                exp = createExpression("(!" + subExpression.get(0).toString() + "|!" + subExpression.get(1).toString() + ")");
                 break;
         }
 

@@ -26,19 +26,21 @@ public class ExpressionComponent {
         this.expanded = false;
 
         this.panel = new JPanel();
-        //this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.Y_AXIS));
-        this.panel.setBackground(getRandomColor());
+        this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.PAGE_AXIS));
+        //this.panel.setBackground(getRandomColor());
 
         this.toppanel = new JPanel();
-        //this.toppanel.setLayout(new BoxLayout(this.toppanel, BoxLayout.Y_AXIS));
+        this.toppanel.setLayout(new BoxLayout(this.toppanel, BoxLayout.Y_AXIS));
 
         for (int i = 0; i < this.expressions.size(); i++) {
 
             final int index = i;
 
             Expression expression = this.expressions.get(i);
+            System.out.println("e: " + expression);
 
             JPanel expressionpanel = new JPanel();
+            //expressionpanel.setLayout(new BoxLayout(expressionpanel, BoxLayout.Y_AXIS));
             JLabel expressionname  = new JLabel(expression.toString(), SwingConstants.CENTER);
 
             expressionpanel.setBackground(getRandomColor());
@@ -51,11 +53,11 @@ public class ExpressionComponent {
             expressionname.setFont(new Font("Monospaced", Font.PLAIN, 20));
             expressionname.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-            expressionpanel.add(expressionname, BorderLayout.PAGE_START);
+            expressionpanel.add(expressionname);
             this.toppanel.add(expressionpanel);
         }
 
-        this.panel.add(this.toppanel, "North");
+        this.panel.add(this.toppanel);
     }
 
     public void solveExpression(int i) {
@@ -127,7 +129,7 @@ public class ExpressionComponent {
                         return;
                 }
 
-                this.panel.add(this.bottompanel, "South");
+                this.panel.add(this.bottompanel);
 
                 this.bottompanel.validate();
                 this.bottompanel.repaint();

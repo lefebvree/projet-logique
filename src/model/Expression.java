@@ -36,6 +36,7 @@ public abstract class Expression {
 
         switch (currentChar) {
             case '!':
+            case '¬':
                 String subExpression = getNextExpression(e, indexChar + 1);
 
                 exp = new Negation(createExpression(subExpression));

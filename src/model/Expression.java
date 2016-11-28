@@ -55,6 +55,7 @@ public abstract class Expression {
                 String secondExpressionSting = getNextExpression(e, indexChar);
 
                 Expression firstExpression  = createExpression(firstExpressionString);
+                System.out.println("#"+secondExpressionSting);
                 Expression secondExpression = createExpression(secondExpressionSting);
 
                 switch (operator) {
@@ -85,7 +86,7 @@ public abstract class Expression {
         int level = 0;
 
         do {
-            if(s.charAt(index) == '!') {
+            while(s.charAt(position) == '!' || s.charAt(position) == '¬') {
                 position++;
             }
 

@@ -30,7 +30,9 @@ public class Window {
         exp.add(e);
 
         this.firstexpression = new ExpressionComponent(exp);
-        this.frame.add(this.firstexpression.getPanel());
+
+        JScrollPane scrollPane = new JScrollPane(this.firstexpression.getPanel());
+        this.frame.add(scrollPane);
 
         this.frame.setVisible(true);
     }

@@ -6,8 +6,8 @@ public class Main {
     public static void main(String[] args) {
 
         ExpressionParser parser = new ExpressionParser();
-        Expression ex = parser.getExpression(6);
-        //Expression ex = parser.getRandomExpression();
+        //Expression ex = parser.getExpression(0);
+        Expression ex = parser.getRandomExpression();
         //Expression ex = Expression.createExpression("!(((p → q) Λ ((r Λ s) → p)) Λ (t → r))|!(s Λ t)");
 
         System.out.println("Expression: " + ex.toString());

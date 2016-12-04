@@ -4,6 +4,7 @@ import model.Expression;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -26,21 +27,20 @@ public class ExpressionComponent {
         this.expanded = false;
 
         this.panel = new JPanel();
-        this.panel.setLayout(new BoxLayout(this.panel, BoxLayout.PAGE_AXIS));
-        //this.panel.setBackground(getRandomColor());
+        this.panel.setLayout(new GridBagLayout());
+        //this.panel.setLayout(new GridLayout(0, 1));
 
         this.toppanel = new JPanel();
-        this.toppanel.setLayout(new BoxLayout(this.toppanel, BoxLayout.Y_AXIS));
+        this.toppanel.setLayout(new GridLayout(0, 1));
+        this.toppanel.setBorder(new MatteBorder(0, 0, 5, 0, Color.BLACK));
 
         for (int i = 0; i < this.expressions.size(); i++) {
 
             final int index = i;
 
             Expression expression = this.expressions.get(i);
-            System.out.println("e: " + expression);
 
             JPanel expressionpanel = new JPanel();
-            //expressionpanel.setLayout(new BoxLayout(expressionpanel, BoxLayout.Y_AXIS));
             JLabel expressionname  = new JLabel(expression.toString(), SwingConstants.CENTER);
 
             expressionpanel.setBackground(getRandomColor());
@@ -54,16 +54,31 @@ public class ExpressionComponent {
             expressionname.setBorder(new EmptyBorder(10, 10, 10, 10));
 
             expressionpanel.add(expressionname);
+
             this.toppanel.add(expressionpanel);
         }
 
-        this.panel.add(this.toppanel);
+        GridBagConstraints c1 = new GridBagConstraints();
+        c1.gridy = 0;
+
+        this.panel.add(this.toppanel, c1);
+
+        this.bottompanel = new JPanel();
+        this.bottompanel.setLayout(new GridLayout(1, 2));
+
+        GridBagConstraints c2 = new GridBagConstraints();
+        c2.gridy = 1;
+        c2.weighty = 1;
+        c2.anchor = GridBagConstraints.NORTH;
+        c2.fill = GridBagConstraints.BOTH;
+
+        //this.bottompanel.setBackground(getRandomColor());
+        this.panel.add(this.bottompanel, c2);
     }
 
     public void solveExpression(int i) {
 
         if (!this.expanded) {
-            this.expanded = true;
 
             Expression expression = this.expressions.get(i);
 
@@ -71,8 +86,6 @@ public class ExpressionComponent {
 
             Expression newexpression;
             String expressiontype;
-
-            this.bottompanel = new JPanel();
 
             if (expression.hasSubExpression()) {
 
@@ -95,7 +108,6 @@ public class ExpressionComponent {
                         subexp.add(0, subExpression.get(1));
 
                         ExpressionComponent expcomp = new ExpressionComponent(subexp);
-
                         this.bottompanel.add(expcomp.getPanel());
 
                         break;
@@ -118,8 +130,6 @@ public class ExpressionComponent {
                         subExpressionComponent.add(new ExpressionComponent(subexp1));
                         subExpressionComponent.add(new ExpressionComponent(subexp2));
 
-                        this.bottompanel.setLayout(new GridLayout(1, 2));
-
                         this.bottompanel.add(subExpressionComponent.get(0).getPanel());
                         this.bottompanel.add(subExpressionComponent.get(1).getPanel());
 
@@ -129,10 +139,7 @@ public class ExpressionComponent {
                         return;
                 }
 
-                this.panel.add(this.bottompanel);
-
-                this.bottompanel.validate();
-                this.bottompanel.repaint();
+                this.expanded = true;
 
                 this.panel.validate();
                 this.panel.repaint();

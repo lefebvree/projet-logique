@@ -60,8 +60,6 @@ class ExpressionComponent {
                             solveExpression(index);
                         } else if (SwingUtilities.isRightMouseButton(e)) {
                             if (hasContradiction()) {
-                                window.decrementOpenExpressionCount();
-
                                 JLabel tick = new JLabel("✓", SwingConstants.CENTER);
                                 tick.setForeground(Color.decode("#2ecc71"));
                                 tick.setFont(new Font("Monospaced", Font.BOLD, 40));
@@ -70,6 +68,8 @@ class ExpressionComponent {
                                 expanded = true;
                                 panel.validate();
                                 panel.repaint();
+
+                                window.decrementOpenExpressionCount();
 
                                 SwingUtilities.updateComponentTreeUI(window.getFrame());
                             } else {

@@ -52,9 +52,10 @@ public abstract class Expression {
                 char operator = e.charAt(indexChar);
                 indexChar++;
 
-                String secondExpressionSting = getNextExpression(e, indexChar);
-
                 Expression firstExpression  = createExpression(firstExpressionString);
+                if (operator == ')') return firstExpression;
+
+                String secondExpressionSting = getNextExpression(e, indexChar);
                 Expression secondExpression = createExpression(secondExpressionSting);
 
                 switch (operator) {

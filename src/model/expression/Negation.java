@@ -42,6 +42,9 @@ public class Negation extends Expression {
             case "Conjunction":
                 exp = createExpression("(!" + subExpression.get(0).toString() + "|!" + subExpression.get(1).toString() + ")");
                 break;
+            case "Negation":
+                exp = this.expression;
+                break;
         }
 
         return exp;

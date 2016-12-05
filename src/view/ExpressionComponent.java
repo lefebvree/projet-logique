@@ -100,31 +100,15 @@ public class ExpressionComponent {
 
                 if (!(expression.getClass().equals(Negation.class) && firstSubExpression.getClass().equals(Litteral.class))) {
 
-                    newexpression = expression.solveExpression();
 
+                    newexpression = expression.solveExpression();
+                    System.out.println("# " + newexpression);
                     expressiontype = newexpression.getClass().getSimpleName();
 
-                    System.out.println(expressiontype);
+                    System.out.println("# " + expressiontype);
 
                     switch (expressiontype) {
-
-                        case "Conjunction":
-
-                            subExpression = newexpression.getSubExpressions();
-
-                            ArrayList<Expression> subexp = new ArrayList<>(this.expressions);
-                            subexp.remove(i);
-
-                            subexp.add(0, subExpression.get(0));
-                            subexp.add(0, subExpression.get(1));
-
-                            ExpressionComponent expcomp = new ExpressionComponent(subexp, this.frame);
-                            this.bottompanel.add(expcomp.getPanel());
-
-                            break;
-
                         case "Disjunction":
-                        case "Implication":
 
                             subExpression = newexpression.getSubExpressions();
 
@@ -143,6 +127,35 @@ public class ExpressionComponent {
 
                             this.bottompanel.add(subExpressionComponent.get(0).getPanel());
                             this.bottompanel.add(subExpressionComponent.get(1).getPanel());
+
+                            break;
+
+                        case "Conjunction":
+
+                            subExpression = newexpression.getSubExpressions();
+
+                            ArrayList<Expression> subexp = new ArrayList<>(this.expressions);
+                            subexp.remove(i);
+
+                            subexp.add(0, subExpression.get(0));
+                            subexp.add(0, subExpression.get(1));
+
+                            ExpressionComponent expcomp = new ExpressionComponent(subexp, this.frame);
+                            this.bottompanel.add(expcomp.getPanel());
+
+                            break;
+
+                        case "Negation":
+
+                            subExpression = newexpression.getSubExpressions();
+
+                            subexp = new ArrayList<>(this.expressions);
+                            subexp.remove(i);
+
+                            subexp.add(0, subExpression.get(0));
+
+                            expcomp = new ExpressionComponent(subexp, this.frame);
+                            this.bottompanel.add(expcomp.getPanel());
 
                             break;
 

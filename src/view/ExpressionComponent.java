@@ -81,7 +81,6 @@ public class ExpressionComponent {
         c2.anchor = GridBagConstraints.NORTH;
         c2.fill = GridBagConstraints.BOTH;
 
-        //this.bottompanel.setBackground(getRandomColor());
         this.panel.add(this.bottompanel, c2);
     }
 

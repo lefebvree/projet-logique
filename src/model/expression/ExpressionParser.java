@@ -43,4 +43,21 @@ public class ExpressionParser {
         return getExpression(rand.nextInt(this.expressions.size()));
     }
 
+    public String[] getExpressionsList () {
+        String[] ex = new String[this.expressions.size()];
+
+        for (int i = 0; i < this.expressions.size(); i++) {
+            String ss = this.expressions.get(i);
+            String a;
+            try {
+                Expression se = Expression.createExpression(ss);
+                a = se.toString();
+            } catch (Exception e) {
+                a = "Exp " + i + " ne marche pas";
+            }
+
+            ex[i] = a;
+        }
+        return ex;
+    }
 }

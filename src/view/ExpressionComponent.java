@@ -4,7 +4,6 @@ import model.Expression;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -15,24 +14,28 @@ public class ExpressionComponent {
 
     private ArrayList<Expression> expressions;
     private JPanel panel, toppanel, bottompanel;
+    private JFrame frame;
 
     private boolean expanded;
 
     private static Random rand = new Random();
 
     private static final String colorlist[] = {"#2ecc71","#27ae60","#16a085","#1abc9c","#3498db","#2980b9","#34495e","#2c3e50","#8e44ad","#9b59b6","#e74c3c","#c0392b","#d35400","#e67e22","#f39c12","#f1c40f"};
+    private static int lastindex = 0;
 
-    public ExpressionComponent (ArrayList<Expression> exps) {
+    public ExpressionComponent (ArrayList<Expression> exps, JFrame f) {
         this.expressions = exps;
         this.expanded = false;
+        this.frame = f;
 
         this.panel = new JPanel();
         this.panel.setLayout(new GridBagLayout());
         //this.panel.setLayout(new GridLayout(0, 1));
+        this.panel.setBorder(new EmptyBorder(2, 2, 2, 2));
 
         this.toppanel = new JPanel();
         this.toppanel.setLayout(new GridLayout(0, 1));
-        this.toppanel.setBorder(new MatteBorder(0, 0, 5, 0, Color.BLACK));
+        this.toppanel.setBorder(new EmptyBorder(0, 0, 15, 0));
 
         for (int i = 0; i < this.expressions.size(); i++) {
 
@@ -107,7 +110,7 @@ public class ExpressionComponent {
                         subexp.add(0, subExpression.get(0));
                         subexp.add(0, subExpression.get(1));
 
-                        ExpressionComponent expcomp = new ExpressionComponent(subexp);
+                        ExpressionComponent expcomp = new ExpressionComponent(subexp, this.frame);
                         this.bottompanel.add(expcomp.getPanel());
 
                         break;
@@ -127,8 +130,8 @@ public class ExpressionComponent {
                         subexp1.add(0, subExpression.get(0));
                         subexp2.add(0, subExpression.get(1));
 
-                        subExpressionComponent.add(new ExpressionComponent(subexp1));
-                        subExpressionComponent.add(new ExpressionComponent(subexp2));
+                        subExpressionComponent.add(new ExpressionComponent(subexp1, this.frame));
+                        subExpressionComponent.add(new ExpressionComponent(subexp2, this.frame));
 
                         this.bottompanel.add(subExpressionComponent.get(0).getPanel());
                         this.bottompanel.add(subExpressionComponent.get(1).getPanel());
@@ -143,6 +146,8 @@ public class ExpressionComponent {
 
                 this.panel.validate();
                 this.panel.repaint();
+
+                SwingUtilities.updateComponentTreeUI(this.frame);
             }
         }
     }
@@ -152,7 +157,12 @@ public class ExpressionComponent {
     }
 
     public static Color getRandomColor() {
-        String color = colorlist[rand.nextInt(colorlist.length)];
+
+        int index = rand.nextInt(colorlist.length);
+        while (index == lastindex) index = rand.nextInt(colorlist.length);
+        lastindex = index;
+
+        String color = colorlist[index];
 
         return Color.decode(color);
     }

@@ -17,7 +17,7 @@ class ExpressionComponent {
 
     private ArrayList<Expression> expressions;
     private JPanel panel, bottompanel;
-    private JFrame frame;
+    private Window window;
     static final Color bgcolor = Color.decode("#2c3e50");
 
     private boolean expanded;
@@ -27,10 +27,10 @@ class ExpressionComponent {
     private static final String colorlist[] = {"#2ecc71","#27ae60","#16a085","#1abc9c","#3498db","#2980b9","#34495e","#8e44ad","#9b59b6","#e74c3c","#c0392b","#d35400","#e67e22","#f39c12","#f1c40f"};
     private static int lastindex = 0;
 
-    ExpressionComponent (ArrayList<Expression> exps, JFrame f) {
+    ExpressionComponent (ArrayList<Expression> exps, Window w) {
         this.expressions = exps;
         this.expanded = false;
-        this.frame = f;
+        this.window = w;
 
         this.panel = new JPanel();
         this.panel.setLayout(new GridBagLayout());
@@ -57,7 +57,11 @@ class ExpressionComponent {
                     if (SwingUtilities.isLeftMouseButton(e)) {
                         solveExpression(index);
                     } else if (SwingUtilities.isRightMouseButton(e)) {
-                        System.out.println(hasContradiction());
+                        if (hasContradiction()) {
+                            window.decrementOpenExpressionCount();
+                        } else {
+                            window.looser();
+                        }
                     }
                 }
             });
@@ -90,7 +94,7 @@ class ExpressionComponent {
 
     private void solveExpression(int i) {
 
-        if (!this.expanded) {
+        if (!this.expanded && !this.window.isGameEnded()) {
 
             Expression expression = this.expressions.get(i);
 
@@ -126,11 +130,13 @@ class ExpressionComponent {
                             subexp1.add(0, subExpression.get(0));
                             subexp2.add(0, subExpression.get(1));
 
-                            subExpressionComponent.add(new ExpressionComponent(subexp1, this.frame));
-                            subExpressionComponent.add(new ExpressionComponent(subexp2, this.frame));
+                            subExpressionComponent.add(new ExpressionComponent(subexp1, this.window));
+                            subExpressionComponent.add(new ExpressionComponent(subexp2, this.window));
 
                             this.bottompanel.add(subExpressionComponent.get(0).getPanel());
                             this.bottompanel.add(subExpressionComponent.get(1).getPanel());
+
+                            this.window.incrementOpenExpressionCount();
 
                             break;
 
@@ -144,7 +150,7 @@ class ExpressionComponent {
                             subexp.add(0, subExpression.get(0));
                             subexp.add(0, subExpression.get(1));
 
-                            ExpressionComponent expcomp = new ExpressionComponent(subexp, this.frame);
+                            ExpressionComponent expcomp = new ExpressionComponent(subexp, this.window);
                             this.bottompanel.add(expcomp.getPanel());
 
                             break;
@@ -158,7 +164,7 @@ class ExpressionComponent {
 
                             subexp.add(0, subExpression.get(0));
 
-                            expcomp = new ExpressionComponent(subexp, this.frame);
+                            expcomp = new ExpressionComponent(subexp, this.window);
                             this.bottompanel.add(expcomp.getPanel());
 
                             break;
@@ -172,7 +178,7 @@ class ExpressionComponent {
                     this.panel.validate();
                     this.panel.repaint();
 
-                    SwingUtilities.updateComponentTreeUI(this.frame);
+                    SwingUtilities.updateComponentTreeUI(this.window.getFrame());
                 }
             }
         }

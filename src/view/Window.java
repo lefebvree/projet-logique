@@ -14,6 +14,9 @@ public class Window {
     private JFrame frame;
     private JPanel gamepanel;
 
+    private int openexpressioncount = 0;
+    private boolean isGameEnded = false;
+
     public Window (ExpressionParser expressions) {
 
         this.frame = new JFrame();
@@ -57,10 +60,33 @@ public class Window {
 
         this.gamepanel = new JPanel();
         JScrollPane scrollPane = new JScrollPane(this.gamepanel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         this.frame.add(scrollPane);
         this.gamepanel.setBackground(ExpressionComponent.bgcolor);
 
         this.frame.setVisible(true);
+    }
+
+    public void incrementOpenExpressionCount() {
+        this.openexpressioncount++;
+    }
+
+    public void decrementOpenExpressionCount() {
+        this.openexpressioncount--;
+
+        if (this.openexpressioncount == 0) {
+            this.isGameEnded = true;
+
+            //displayMessage("Bravo ! Tu es très fort !");
+            System.out.println("ya");
+        }
+    }
+
+    public void looser() {
+        this.isGameEnded = true;
+
+        //displayMessage("Bravo ! Tu es très fort !");
+        System.out.println("na");
     }
 
     private void launchGame (Expression e) {
@@ -70,10 +96,21 @@ public class Window {
         ArrayList<Expression> exp = new ArrayList<>();
         exp.add(e);
 
-        ExpressionComponent firstexpression = new ExpressionComponent(exp, this.frame);
+        this.isGameEnded = false;
+        this.openexpressioncount = 1;
+
+        ExpressionComponent firstexpression = new ExpressionComponent(exp, this);
         this.gamepanel.add(firstexpression.getPanel());
 
         this.gamepanel.validate();
         this.gamepanel.repaint();
+    }
+
+    public boolean isGameEnded() {
+        return isGameEnded;
+    }
+
+    public JFrame getFrame() {
+        return frame;
     }
 }

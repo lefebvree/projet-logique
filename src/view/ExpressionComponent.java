@@ -54,7 +54,11 @@ public class ExpressionComponent {
             expressionpanel.setBackground(getRandomColor());
             expressionpanel.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
-                    solveExpression(index);
+                    if (SwingUtilities.isLeftMouseButton(e)) {
+                        solveExpression(index);
+                    } else if (SwingUtilities.isRightMouseButton(e)) {
+                        System.out.println(hasContradiction());
+                    }
                 }
             });
             expressionname.setForeground(Color.WHITE);
@@ -172,6 +176,20 @@ public class ExpressionComponent {
                 }
             }
         }
+    }
+
+    private boolean hasContradiction () {
+        for (Expression e1 : expressions) {
+            if (e1.getClass() == Negation.class) {
+                for (Expression e2 : expressions) {
+                    if (e2.getClass() == Litteral.class) {
+                        if (((Negation)e1).isNegationOf((Litteral) e2)) return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public JPanel getPanel() {

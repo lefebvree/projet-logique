@@ -59,14 +59,8 @@ public class Negation extends Expression {
     }
 
     public boolean isNegationOf(Litteral l) {
-        String className = this.expression.getClass().getSimpleName();
-
-        if(className == "Litteral") {
-            return ((Litteral)this.expression).getName() == l.getName();
-        } else {
-            return false;
-        }
-
+        if (this.expression.getClass() != Litteral.class) return false;
+        return ((Litteral)this.expression).getName() == l.getName();
     }
 
     public String toString() {

@@ -62,7 +62,10 @@ class ExpressionComponent {
                             if (hasContradiction()) {
                                 window.decrementOpenExpressionCount();
 
-                                bottompanel.add(new JLabel("\uD83D\uDC4D", SwingConstants.CENTER));
+                                JLabel tick = new JLabel("✓", SwingConstants.CENTER);
+                                tick.setForeground(Color.decode("#2ecc71"));
+                                tick.setFont(new Font("Monospaced", Font.BOLD, 40));
+                                bottompanel.add(tick);
 
                                 expanded = true;
                                 panel.validate();
@@ -70,6 +73,17 @@ class ExpressionComponent {
 
                                 SwingUtilities.updateComponentTreeUI(window.getFrame());
                             } else {
+                                JLabel tick = new JLabel("✗", SwingConstants.CENTER);
+                                tick.setForeground(Color.decode("#e74c3c"));
+                                tick.setFont(new Font("Monospaced", Font.BOLD, 40));
+                                bottompanel.add(tick);
+
+                                expanded = true;
+                                panel.validate();
+                                panel.repaint();
+
+                                SwingUtilities.updateComponentTreeUI(window.getFrame());
+
                                 window.looser();
                             }
                         }
@@ -117,12 +131,8 @@ class ExpressionComponent {
 
             if (!(expression.getClass().equals(Negation.class) && firstSubExpression.getClass().equals(Litteral.class))) {
 
-
                 newexpression = expression.solveExpression();
-                System.out.println("# " + newexpression);
                 expressiontype = newexpression.getClass().getSimpleName();
-
-                System.out.println("# " + expressiontype);
 
                 switch (expressiontype) {
                     case "Disjunction":

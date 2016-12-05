@@ -4,6 +4,7 @@ import model.Expression;
 import model.expression.ExpressionParser;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -67,26 +68,24 @@ public class Window {
         this.frame.setVisible(true);
     }
 
-    public void incrementOpenExpressionCount() {
+    void incrementOpenExpressionCount() {
         this.openexpressioncount++;
     }
 
-    public void decrementOpenExpressionCount() {
+    void decrementOpenExpressionCount() {
         this.openexpressioncount--;
 
         if (this.openexpressioncount == 0) {
             this.isGameEnded = true;
 
-            //displayMessage("Bravo ! Tu es très fort !");
-            System.out.println("ya");
+            displayMessage("Bravo ! Tu es très fort !");
         }
     }
 
-    public void looser() {
+    void looser() {
         this.isGameEnded = true;
 
-        //displayMessage("Bravo ! Tu es très fort !");
-        System.out.println("na");
+        displayMessage("Oulala ! Il faudrait revoir tes cours HLIN509 plus communément appele Logique des propositions !");
     }
 
     private void launchGame (Expression e) {
@@ -106,11 +105,24 @@ public class Window {
         this.gamepanel.repaint();
     }
 
-    public boolean isGameEnded() {
+    boolean isGameEnded() {
         return isGameEnded;
     }
 
-    public JFrame getFrame() {
+    JFrame getFrame() {
         return frame;
+    }
+
+    private static void displayMessage(String message) {
+        JFrame messageWindow = new JFrame();
+        messageWindow.setTitle("Information");
+        messageWindow.setLocation(500, 500);
+
+        JLabel label = new JLabel(message, SwingConstants.CENTER);
+        label.setBorder(new EmptyBorder(15, 25, 15, 25));
+        messageWindow.add(label);
+
+        messageWindow.pack();
+        messageWindow.setVisible(true);
     }
 }

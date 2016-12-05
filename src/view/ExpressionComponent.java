@@ -4,6 +4,7 @@ import model.Expression;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -15,12 +16,13 @@ public class ExpressionComponent {
     private ArrayList<Expression> expressions;
     private JPanel panel, toppanel, bottompanel;
     private JFrame frame;
+    public static final Color bgcolor = Color.decode("#2c3e50");
 
     private boolean expanded;
 
     private static Random rand = new Random();
 
-    private static final String colorlist[] = {"#2ecc71","#27ae60","#16a085","#1abc9c","#3498db","#2980b9","#34495e","#2c3e50","#8e44ad","#9b59b6","#e74c3c","#c0392b","#d35400","#e67e22","#f39c12","#f1c40f"};
+    private static final String colorlist[] = {"#2ecc71","#27ae60","#16a085","#1abc9c","#3498db","#2980b9","#34495e","#8e44ad","#9b59b6","#e74c3c","#c0392b","#d35400","#e67e22","#f39c12","#f1c40f"};
     private static int lastindex = 0;
 
     public ExpressionComponent (ArrayList<Expression> exps, JFrame f) {
@@ -32,10 +34,11 @@ public class ExpressionComponent {
         this.panel.setLayout(new GridBagLayout());
         //this.panel.setLayout(new GridLayout(0, 1));
         this.panel.setBorder(new EmptyBorder(2, 2, 2, 2));
+        this.panel.setBackground(bgcolor);
 
         this.toppanel = new JPanel();
         this.toppanel.setLayout(new GridLayout(0, 1));
-        this.toppanel.setBorder(new EmptyBorder(0, 0, 15, 0));
+        this.toppanel.setBorder(new MatteBorder(0, 0, 15, 0, bgcolor));
 
         for (int i = 0; i < this.expressions.size(); i++) {
 
@@ -68,6 +71,7 @@ public class ExpressionComponent {
 
         this.bottompanel = new JPanel();
         this.bottompanel.setLayout(new GridLayout(1, 2));
+        this.bottompanel.setBackground(bgcolor);
 
         GridBagConstraints c2 = new GridBagConstraints();
         c2.gridy = 1;

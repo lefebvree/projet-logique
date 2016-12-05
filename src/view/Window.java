@@ -31,7 +31,7 @@ public class Window {
         this.gamepanel = new JPanel();
         JScrollPane scrollPane = new JScrollPane(this.gamepanel);
         this.frame.add(scrollPane);
-        this.frame.setBackground(Color.decode("#2c3e50"));
+        this.gamepanel.setBackground(ExpressionComponent.bgcolor);
 
         launchGame(e);
 

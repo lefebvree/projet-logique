@@ -35,7 +35,7 @@ public class Litteral extends Expression {
         return this;
     }
 
-    public char getName() {
+    char getName() {
         return name;
     }
 

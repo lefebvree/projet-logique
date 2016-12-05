@@ -13,12 +13,12 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class ExpressionComponent {
+class ExpressionComponent {
 
     private ArrayList<Expression> expressions;
-    private JPanel panel, toppanel, bottompanel;
+    private JPanel panel, bottompanel;
     private JFrame frame;
-    public static final Color bgcolor = Color.decode("#2c3e50");
+    static final Color bgcolor = Color.decode("#2c3e50");
 
     private boolean expanded;
 
@@ -27,7 +27,7 @@ public class ExpressionComponent {
     private static final String colorlist[] = {"#2ecc71","#27ae60","#16a085","#1abc9c","#3498db","#2980b9","#34495e","#8e44ad","#9b59b6","#e74c3c","#c0392b","#d35400","#e67e22","#f39c12","#f1c40f"};
     private static int lastindex = 0;
 
-    public ExpressionComponent (ArrayList<Expression> exps, JFrame f) {
+    ExpressionComponent (ArrayList<Expression> exps, JFrame f) {
         this.expressions = exps;
         this.expanded = false;
         this.frame = f;
@@ -38,9 +38,9 @@ public class ExpressionComponent {
         this.panel.setBorder(new EmptyBorder(2, 2, 2, 2));
         this.panel.setBackground(bgcolor);
 
-        this.toppanel = new JPanel();
-        this.toppanel.setLayout(new GridLayout(0, 1));
-        this.toppanel.setBorder(new MatteBorder(0, 0, 15, 0, bgcolor));
+        JPanel toppanel = new JPanel();
+        toppanel.setLayout(new GridLayout(0, 1));
+        toppanel.setBorder(new MatteBorder(0, 0, 15, 0, bgcolor));
 
         for (int i = 0; i < this.expressions.size(); i++) {
 
@@ -67,13 +67,13 @@ public class ExpressionComponent {
 
             expressionpanel.add(expressionname);
 
-            this.toppanel.add(expressionpanel);
+            toppanel.add(expressionpanel);
         }
 
         GridBagConstraints c1 = new GridBagConstraints();
         c1.gridy = 0;
 
-        this.panel.add(this.toppanel, c1);
+        this.panel.add(toppanel, c1);
 
         this.bottompanel = new JPanel();
         this.bottompanel.setLayout(new GridLayout(1, 2));
@@ -88,7 +88,7 @@ public class ExpressionComponent {
         this.panel.add(this.bottompanel, c2);
     }
 
-    public void solveExpression(int i) {
+    private void solveExpression(int i) {
 
         if (!this.expanded) {
 
@@ -192,11 +192,11 @@ public class ExpressionComponent {
         return false;
     }
 
-    public JPanel getPanel() {
+    JPanel getPanel() {
         return panel;
     }
 
-    public static Color getRandomColor() {
+    private static Color getRandomColor() {
 
         int index = rand.nextInt(colorlist.length);
         while (index == lastindex) index = rand.nextInt(colorlist.length);

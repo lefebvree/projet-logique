@@ -40,8 +40,7 @@ public class Disjunction extends Expression {
     }
 
     public Expression solveExpression() {
-        Expression exp = createExpression("(" + this.expression1.toString() + "|" + this.expression2.toString() + ")");
-        return exp;
+        return createExpression("(" + this.expression1.toString() + "|" + this.expression2.toString() + ")");
     }
 
     public String toString() {

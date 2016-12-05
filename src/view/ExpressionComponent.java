@@ -52,15 +52,26 @@ class ExpressionComponent {
             JLabel expressionname  = new JLabel(expression.toString(), SwingConstants.CENTER);
 
             expressionpanel.setBackground(getRandomColor());
+
             expressionpanel.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
-                    if (SwingUtilities.isLeftMouseButton(e)) {
-                        solveExpression(index);
-                    } else if (SwingUtilities.isRightMouseButton(e)) {
-                        if (hasContradiction()) {
-                            window.decrementOpenExpressionCount();
-                        } else {
-                            window.looser();
+                    if (!expanded && !window.isGameEnded()) {
+                        if (SwingUtilities.isLeftMouseButton(e)) {
+                            solveExpression(index);
+                        } else if (SwingUtilities.isRightMouseButton(e)) {
+                            if (hasContradiction()) {
+                                window.decrementOpenExpressionCount();
+
+                                bottompanel.add(new JLabel("\uD83D\uDC4D", SwingConstants.CENTER));
+
+                                expanded = true;
+                                panel.validate();
+                                panel.repaint();
+
+                                SwingUtilities.updateComponentTreeUI(window.getFrame());
+                            } else {
+                                window.looser();
+                            }
                         }
                     }
                 }
@@ -94,94 +105,92 @@ class ExpressionComponent {
 
     private void solveExpression(int i) {
 
-        if (!this.expanded && !this.window.isGameEnded()) {
+        Expression expression = this.expressions.get(i);
 
-            Expression expression = this.expressions.get(i);
+        ArrayList<Expression> subExpression;
 
-            ArrayList<Expression> subExpression;
+        Expression newexpression;
+        String expressiontype;
 
-            Expression newexpression;
-            String expressiontype;
+        if (expression.hasSubExpression()) {
+            Expression firstSubExpression = expression.getSubExpressions().get(0);
 
-            if (expression.hasSubExpression()) {
-                Expression firstSubExpression = expression.getSubExpressions().get(0);
-
-                if (!(expression.getClass().equals(Negation.class) && firstSubExpression.getClass().equals(Litteral.class))) {
+            if (!(expression.getClass().equals(Negation.class) && firstSubExpression.getClass().equals(Litteral.class))) {
 
 
-                    newexpression = expression.solveExpression();
-                    System.out.println("# " + newexpression);
-                    expressiontype = newexpression.getClass().getSimpleName();
+                newexpression = expression.solveExpression();
+                System.out.println("# " + newexpression);
+                expressiontype = newexpression.getClass().getSimpleName();
 
-                    System.out.println("# " + expressiontype);
+                System.out.println("# " + expressiontype);
 
-                    switch (expressiontype) {
-                        case "Disjunction":
+                switch (expressiontype) {
+                    case "Disjunction":
 
-                            subExpression = newexpression.getSubExpressions();
+                        subExpression = newexpression.getSubExpressions();
 
-                            ArrayList<ExpressionComponent> subExpressionComponent = new ArrayList<>();
+                        ArrayList<ExpressionComponent> subExpressionComponent = new ArrayList<>();
 
-                            ArrayList<Expression> subexp1 = new ArrayList<>(this.expressions);
-                            ArrayList<Expression> subexp2 = new ArrayList<>(this.expressions);
-                            subexp1.remove(i);
-                            subexp2.remove(i);
+                        ArrayList<Expression> subexp1 = new ArrayList<>(this.expressions);
+                        ArrayList<Expression> subexp2 = new ArrayList<>(this.expressions);
+                        subexp1.remove(i);
+                        subexp2.remove(i);
 
-                            subexp1.add(0, subExpression.get(0));
-                            subexp2.add(0, subExpression.get(1));
+                        subexp1.add(0, subExpression.get(0));
+                        subexp2.add(0, subExpression.get(1));
 
-                            subExpressionComponent.add(new ExpressionComponent(subexp1, this.window));
-                            subExpressionComponent.add(new ExpressionComponent(subexp2, this.window));
+                        subExpressionComponent.add(new ExpressionComponent(subexp1, this.window));
+                        subExpressionComponent.add(new ExpressionComponent(subexp2, this.window));
 
-                            this.bottompanel.add(subExpressionComponent.get(0).getPanel());
-                            this.bottompanel.add(subExpressionComponent.get(1).getPanel());
+                        this.bottompanel.add(subExpressionComponent.get(0).getPanel());
+                        this.bottompanel.add(subExpressionComponent.get(1).getPanel());
 
-                            this.window.incrementOpenExpressionCount();
+                        this.window.incrementOpenExpressionCount();
 
-                            break;
+                        break;
 
-                        case "Conjunction":
+                    case "Conjunction":
 
-                            subExpression = newexpression.getSubExpressions();
+                        subExpression = newexpression.getSubExpressions();
 
-                            ArrayList<Expression> subexp = new ArrayList<>(this.expressions);
-                            subexp.remove(i);
+                        ArrayList<Expression> subexp = new ArrayList<>(this.expressions);
+                        subexp.remove(i);
 
-                            subexp.add(0, subExpression.get(0));
-                            subexp.add(0, subExpression.get(1));
+                        subexp.add(0, subExpression.get(0));
+                        subexp.add(0, subExpression.get(1));
 
-                            ExpressionComponent expcomp = new ExpressionComponent(subexp, this.window);
-                            this.bottompanel.add(expcomp.getPanel());
+                        ExpressionComponent expcomp = new ExpressionComponent(subexp, this.window);
+                        this.bottompanel.add(expcomp.getPanel());
 
-                            break;
+                        break;
 
-                        case "Negation":
+                    case "Negation":
 
-                            subExpression = newexpression.getSubExpressions();
+                        subExpression = newexpression.getSubExpressions();
 
-                            subexp = new ArrayList<>(this.expressions);
-                            subexp.remove(i);
+                        subexp = new ArrayList<>(this.expressions);
+                        subexp.remove(i);
 
-                            subexp.add(0, subExpression.get(0));
+                        subexp.add(0, subExpression.get(0));
 
-                            expcomp = new ExpressionComponent(subexp, this.window);
-                            this.bottompanel.add(expcomp.getPanel());
+                        expcomp = new ExpressionComponent(subexp, this.window);
+                        this.bottompanel.add(expcomp.getPanel());
 
-                            break;
+                        break;
 
-                        default:
-                            return;
-                    }
-
-                    this.expanded = true;
-
-                    this.panel.validate();
-                    this.panel.repaint();
-
-                    SwingUtilities.updateComponentTreeUI(this.window.getFrame());
+                    default:
+                        return;
                 }
+
+                this.expanded = true;
+
+                this.panel.validate();
+                this.panel.repaint();
+
+                SwingUtilities.updateComponentTreeUI(this.window.getFrame());
             }
         }
+
     }
 
     private boolean hasContradiction () {

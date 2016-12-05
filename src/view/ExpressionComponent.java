@@ -1,6 +1,8 @@
 package view;
 
 import model.Expression;
+import model.expression.Litteral;
+import model.expression.Negation;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -95,63 +97,67 @@ public class ExpressionComponent {
             String expressiontype;
 
             if (expression.hasSubExpression()) {
+                Expression firstSubExpression = expression.getSubExpressions().get(0);
 
-                newexpression = expression.solveExpression();
+                if (!(expression.getClass().equals(Negation.class) && firstSubExpression.getClass().equals(Litteral.class))) {
 
-                expressiontype = newexpression.getClass().getSimpleName();
+                    newexpression = expression.solveExpression();
 
-                System.out.println(expressiontype);
+                    expressiontype = newexpression.getClass().getSimpleName();
 
-                switch (expressiontype) {
+                    System.out.println(expressiontype);
 
-                    case "Conjunction":
+                    switch (expressiontype) {
 
-                        subExpression = newexpression.getSubExpressions();
+                        case "Conjunction":
 
-                        ArrayList<Expression> subexp = new ArrayList<>(this.expressions);
-                        subexp.remove(i);
+                            subExpression = newexpression.getSubExpressions();
 
-                        subexp.add(0, subExpression.get(0));
-                        subexp.add(0, subExpression.get(1));
+                            ArrayList<Expression> subexp = new ArrayList<>(this.expressions);
+                            subexp.remove(i);
 
-                        ExpressionComponent expcomp = new ExpressionComponent(subexp, this.frame);
-                        this.bottompanel.add(expcomp.getPanel());
+                            subexp.add(0, subExpression.get(0));
+                            subexp.add(0, subExpression.get(1));
 
-                        break;
+                            ExpressionComponent expcomp = new ExpressionComponent(subexp, this.frame);
+                            this.bottompanel.add(expcomp.getPanel());
 
-                    case "Disjunction":
-                    case "Implication":
+                            break;
 
-                        subExpression = newexpression.getSubExpressions();
+                        case "Disjunction":
+                        case "Implication":
 
-                        ArrayList<ExpressionComponent> subExpressionComponent = new ArrayList<>();
+                            subExpression = newexpression.getSubExpressions();
 
-                        ArrayList<Expression> subexp1 = new ArrayList<>(this.expressions);
-                        ArrayList<Expression> subexp2 = new ArrayList<>(this.expressions);
-                        subexp1.remove(i);
-                        subexp2.remove(i);
+                            ArrayList<ExpressionComponent> subExpressionComponent = new ArrayList<>();
 
-                        subexp1.add(0, subExpression.get(0));
-                        subexp2.add(0, subExpression.get(1));
+                            ArrayList<Expression> subexp1 = new ArrayList<>(this.expressions);
+                            ArrayList<Expression> subexp2 = new ArrayList<>(this.expressions);
+                            subexp1.remove(i);
+                            subexp2.remove(i);
 
-                        subExpressionComponent.add(new ExpressionComponent(subexp1, this.frame));
-                        subExpressionComponent.add(new ExpressionComponent(subexp2, this.frame));
+                            subexp1.add(0, subExpression.get(0));
+                            subexp2.add(0, subExpression.get(1));
 
-                        this.bottompanel.add(subExpressionComponent.get(0).getPanel());
-                        this.bottompanel.add(subExpressionComponent.get(1).getPanel());
+                            subExpressionComponent.add(new ExpressionComponent(subexp1, this.frame));
+                            subExpressionComponent.add(new ExpressionComponent(subexp2, this.frame));
 
-                        break;
+                            this.bottompanel.add(subExpressionComponent.get(0).getPanel());
+                            this.bottompanel.add(subExpressionComponent.get(1).getPanel());
 
-                    default:
-                        return;
+                            break;
+
+                        default:
+                            return;
+                    }
+
+                    this.expanded = true;
+
+                    this.panel.validate();
+                    this.panel.repaint();
+
+                    SwingUtilities.updateComponentTreeUI(this.frame);
                 }
-
-                this.expanded = true;
-
-                this.panel.validate();
-                this.panel.repaint();
-
-                SwingUtilities.updateComponentTreeUI(this.frame);
             }
         }
     }
